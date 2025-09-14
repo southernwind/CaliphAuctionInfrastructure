@@ -1,0 +1,6 @@
+---
+- name: Restart backend service
+  systemd:
+    name: "{{ backend_service_name }}"
+    state: restarted
+    enabled: yes

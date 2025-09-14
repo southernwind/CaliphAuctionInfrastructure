@@ -1,0 +1,29 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Upgrade packages (safe)
+  apt:
+    upgrade: safe
+
+- name: Ensure basic packages
+  apt:
+    name:
+      - curl
+      - git
+      - ufw
+      - ca-certificates
+    state: present
+
+- name: Configure UFW allow ports
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+  loop: "{{ ufw_allow_ports }}"
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+    policy: deny

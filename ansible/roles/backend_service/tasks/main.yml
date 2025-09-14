@@ -1,0 +1,19 @@
+---
+- name: Create systemd unit for backend
+  template:
+    src: caliph-backend.service.j2
+    dest: /etc/systemd/system/{{ backend_service_name }}.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart backend service
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
+- name: Enable & start backend service
+  systemd:
+    name: "{{ backend_service_name }}"
+    state: started
+    enabled: yes

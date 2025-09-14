@@ -1,0 +1,56 @@
+---
+- name: Ensure PostgreSQL APT repository prerequisites
+  apt:
+    name: postgresql
+    state: present
+    update_cache: yes
+
+- name: Ensure PostgreSQL service enabled
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Detect installed PostgreSQL version directory
+  shell: "ls -1 /etc/postgresql | sort -nr | head -1"
+  register: pg_version_dir
+  changed_when: false
+
+- name: Set fact for postgres_version_detected
+  set_fact:
+    postgres_version_detected: "{{ pg_version_dir.stdout }}"
+
+- name: Debug detected postgres version
+  debug:
+    msg: "Detected PostgreSQL version: {{ postgres_version_detected }}"
+
+- name: Set fact for config paths
+  set_fact:
+    postgres_conf_path: "/etc/postgresql/{{ postgres_version_detected }}/main/postgresql.conf"
+    postgres_hba_path: "/etc/postgresql/{{ postgres_version_detected }}/main/pg_hba.conf"
+
+
+- name: Install psycopg2 dependency for Ansible PostgreSQL modules
+  apt:
+    name: python3-psycopg2
+    state: present
+    update_cache: yes
+  tags: [postgres, deps]
+
+
+- name: Create database user
+  become_user: postgres
+  postgresql_user:
+    name: "{{ postgres_user }}"
+    password: "{{ postgres_password }}"
+    role_attr_flags: LOGIN
+
+- name: Create application database
+  become_user: postgres
+  postgresql_db:
+    name: "{{ postgres_db }}"
+    owner: "{{ postgres_user }}"
+    encoding: UTF8
+    state: present
+
+...

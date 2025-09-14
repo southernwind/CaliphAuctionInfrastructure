@@ -1,0 +1,41 @@
+# 共通変数
+app_user: deploy
+app_group: deploy
+base_dir: /opt/caliph-auction
+front_dir: /var/www/caliph-auction/front
+cdn_dir: /var/www/caliph-auction/cdn
+backend_dir: "{{ base_dir }}/backend"
+
+backend_service_name: caliph-backend
+backend_port: 5000
+backend_env: production
+
+# nginx
+nginx_server_name: caliphauction.com
+nginx_front_root: "{{ front_dir }}"
+nginx_cdn_root: "{{ cdn_dir }}"
+nginx_backend_upstream: "http://127.0.0.1:{{ backend_port }}"
+
+# PostgreSQL
+postgres_db: caliphdb
+postgres_user: caliph
+# postgres_password は group_vars に含めない。extra-vars か環境変数で注入。
+
+# Firewall (ufw)
+ufw_allow_ports:
+  - 80
+  - 443
+  - 30532
+
+# SSH hardening
+ssh_port: 30532
+ansible_port: "{{ ssh_port }}"
+
+# TLS / Let's Encrypt (常に有効運用前提)
+letsencrypt_email: "xmi1995@gmail.com"  # 運用用メールに変更
+letsencrypt_domains:
+  - "caliphauction.com"
+  - "www.caliphauction.com"
+  - "api.caliphauction.com"
+  - "cdn.caliphauction.com"
+letsencrypt_webroot: /var/www/letsencrypt  # ACME http-01 用

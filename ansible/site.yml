@@ -1,0 +1,19 @@
+---
+- name: Provision Caliph Auction server
+  hosts: web
+  become: true
+  vars:
+  pre_tasks:
+    - name: Assert postgres_password provided
+      assert:
+        that:
+          - postgres_password is defined
+          - postgres_password | length > 0
+        fail_msg: "postgres_password が指定されていません。ansible-playbook 実行時に -e \"postgres_password=...\" を指定してください。GitHub Actions では Secrets から注入します。"
+  roles:
+    - role: common
+    - role: dotnet
+    - role: postgres
+    - role: nginx
+    - role: letsencrypt
+    - role: backend_service

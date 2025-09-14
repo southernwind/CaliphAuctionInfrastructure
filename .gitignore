@@ -1,0 +1,15 @@
+# Ansible
+*.retry
+
+# Python virtual envs (if created locally)
+venv/
+.env
+
+# Mac / Windows / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Logs
+*.log

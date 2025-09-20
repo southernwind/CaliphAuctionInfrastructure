@@ -9,12 +9,14 @@ backend_dir: "{{ base_dir }}/backend"
 backend_service_name: caliph-backend
 backend_port: 5000
 backend_env: production
+space_port: 5010
 
 # nginx
 nginx_server_name: caliphauction.com
 nginx_front_root: "{{ front_dir }}"
 nginx_cdn_root: "{{ cdn_dir }}"
 nginx_backend_upstream: "http://127.0.0.1:{{ backend_port }}"
+nginx_space_upstream: "http://127.0.0.1:{{ space_port }}"
 
 # PostgreSQL
 postgres_db: caliphdb
@@ -39,3 +41,6 @@ letsencrypt_domains:
   - "api.caliphauction.com"
   - "cdn.caliphauction.com"
 letsencrypt_webroot: /var/www/letsencrypt  # ACME http-01 用
+
+analyze_dir: /var/www/analyze/caliphauction
+space_dir: /var/www/space

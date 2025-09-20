@@ -9,7 +9,7 @@
   file:
     path: /etc/nginx/sites-enabled/default
     state: absent
-  notify: Reload nginx
+  notify: Restart nginx
 
 - name: Check existing certificate
   stat:
@@ -23,14 +23,30 @@
     owner: root
     group: root
     mode: '0644'
-  notify: Reload nginx
+  notify: Restart nginx
 
 - name: Enable site
   file:
     src: /etc/nginx/sites-available/caliph.conf
     dest: /etc/nginx/sites-enabled/caliph.conf
     state: link
-  notify: Reload nginx
+  notify: Restart nginx
+
+- name: Deploy other config template 
+  template:
+    src: other_full.conf.j2
+    dest: /etc/nginx/sites-available/other.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart nginx
+
+- name: Enable other site
+  file:
+    src: /etc/nginx/sites-available/other.conf
+    dest: /etc/nginx/sites-enabled/other.conf
+    state: link
+  notify: Restart nginx
 
 - name: Ensure nginx running
   service:

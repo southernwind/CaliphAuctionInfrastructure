@@ -39,3 +39,6 @@ letsencrypt_domains:
   - "api.caliphauction.com"
   - "cdn.caliphauction.com"
 letsencrypt_webroot: /var/www/letsencrypt  # ACME http-01 用
+
+analyze_dir: /var/www/analyze/caliphauction
+space_dir: /var/www/space
